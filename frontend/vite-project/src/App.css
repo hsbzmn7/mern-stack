@@ -1,0 +1,43 @@
+.home-hero {
+  padding: 80px 0;
+  background: linear-gradient(135deg, #4f46e5, #3b82f6); 
+  color: #ffffff;
+  min-height: 100vh;
+}
+
+.home-hero h1 {
+  font-size: 3.5rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+
+.home-hero p {
+  font-size: 1.2rem;
+  line-height: 1.6;
+}
+
+.home-hero img {
+  max-height: 400px;
+  width: 100%;
+  object-fit: contain;
+}
+
+.btn {
+  font-weight: 500;
+  padding: 10px 20px;
+  border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+  .home-hero {
+    text-align: center;
+  }
+
+  .home-hero h1 {
+    font-size: 2.5rem;
+  }
+
+  .home-hero img {
+    margin-top: 40px;
+  }
+}
