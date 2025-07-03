@@ -3,26 +3,26 @@ import { Modal, Button, Form } from 'react-bootstrap';
 
 const ProductModal = ({ show, handleClose, product, onSubmit }) => {
     const [formValues, setFormValues] = useState({
-        name: '',
+        title: '',
         description: '',
         price: '',
-        banner: ''
+        image: ''
     });
 
     useEffect(() => {
         if (product) {
             setFormValues({
-                name: product.name || '',
+                title: product.title || '',
                 description: product.description || '',
                 price: product.price || '',
-                banner: product.banner || ''
+                image: product.image || ''
             });
         } else {
             setFormValues({
-                name: '',
+                title: '',
                 description: '',
                 price: '',
-                banner: ''
+                image: ''
             });
         }
     }, [product]);
@@ -51,13 +51,13 @@ const ProductModal = ({ show, handleClose, product, onSubmit }) => {
             <Form onSubmit={submitForm}>
                 <Modal.Body>
                     <Form.Group className="mb-3">
-                        <Form.Label>Product Name</Form.Label>
+                        <Form.Label>Product Title</Form.Label>
                         <Form.Control
                             type="text"
-                            name="name"
-                            value={formValues.name}
+                            name="title"
+                            value={formValues.title}
                             onChange={updateField}
-                            placeholder="Enter product name"
+                            placeholder="Enter product title"
                             required
                         />
                     </Form.Group>
@@ -93,8 +93,8 @@ const ProductModal = ({ show, handleClose, product, onSubmit }) => {
                         <Form.Label>Image URL</Form.Label>
                         <Form.Control
                             type="url"
-                            name="banner"
-                            value={formValues.banner}
+                            name="image"
+                            value={formValues.image}
                             onChange={updateField}
                             placeholder="Enter image URL"
                             required

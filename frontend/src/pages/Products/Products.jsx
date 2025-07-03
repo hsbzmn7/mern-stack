@@ -4,7 +4,7 @@ import { EmptyComponent } from "../../components/Empty";
 import ProductCard from "../../components/ProductCard";
 import ProductModal from "../../components/ProductModal";
 import { Container, Row, Col, Button } from "react-bootstrap";
-import axios from "axios";
+import { productsAPI } from "../../services/api";
 
 export const Products = () => {
   const [productList, setProductList] = useState([]);
@@ -20,7 +20,7 @@ export const Products = () => {
 
   const loadProducts = async () => {
     try {
-      const result = await axios.get('/api/products');
+      const result = await productsAPI.getAll();
       setProductList(result.data);
       setIsLoading(false);
     } catch (err) {
@@ -31,8 +31,8 @@ export const Products = () => {
 
   const removeProduct = async (id) => {
     try {
-      await axios.delete(`/api/products/${id}`);
-      setProductList(productList.filter(item => item.id !== id));
+      await productsAPI.delete(id);
+      setProductList(productList.filter(item => item._id !== id));
     } catch (err) {
       setErrorMsg('Failed to remove product');
     }
@@ -47,14 +47,15 @@ export const Products = () => {
     try {
       if (currentProduct) {
         // Update existing
-        const updated = await axios.put(`/api/products/${currentProduct.id}`, data);
-        setProductList(productList.map(p => p.id === currentProduct.id ? updated.data : p));
+        const updated = await productsAPI.update(currentProduct._id, data);
+        setProductList(productList.map(p => p._id === currentProduct._id ? updated.data : p));
       } else {
         // Create new
-        const newProduct = await axios.post('/api/products', data);
+        const newProduct = await productsAPI.create(data);
         setProductList([...productList, newProduct.data]);
       }
       setCurrentProduct(null);
+      setModalVisible(false);
     } catch (err) {
       setErrorMsg('Could not save product changes');
     }
@@ -111,10 +112,10 @@ export const Products = () => {
         ) : (
           <Row className="g-4">
             {productList.map((item) => (
-              <Col key={item.id} xs={12} sm={6} md={4} lg={3}>
+              <Col key={item._id} xs={12} sm={6} md={4} lg={3}>
                 <ProductCard 
                   product={item} 
-                  onDelete={() => removeProduct(item.id)}
+                  onDelete={() => removeProduct(item._id)}
                   onEdit={() => openEditModal(item)}
                 />
               </Col>

@@ -21,18 +21,18 @@ const ProductCard = ({ product, onDelete, onEdit }) => {
             <div className="position-relative">
                 <Card.Img 
                     variant="top" 
-                    src={product.banner} 
+                    src={product.image} 
                     style={{ 
                         height: '200px', 
                         objectFit: 'cover',
                         borderTopLeftRadius: '0.375rem',
                         borderTopRightRadius: '0.375rem'
                     }}
-                    alt={product.name}
+                    alt={product.title}
                 />
             </div>
             <Card.Body className="d-flex flex-column p-3">
-                <Card.Title className="text-truncate mb-2">{product.name}</Card.Title>
+                <Card.Title className="text-truncate mb-2">{product.title}</Card.Title>
                 <Card.Text className="flex-grow-1 text-muted small">{product.description}</Card.Text>
 
                 <div className="d-flex justify-content-between align-items-center mt-3 pt-2 border-top">
