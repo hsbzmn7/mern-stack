@@ -85,18 +85,18 @@ router.put('/:id',
   }
 );
 
-// Delete a product (admin only)
-router.delete('/:id', auth, requireRole('admin'), async (req, res) => {
-  try {
-    const product = await Product.findByIdAndDelete(req.params.id);
-    if (product) {
-      res.json({ message: 'Product deleted' });
-    } else {
-      res.status(404).json({ message: 'Product not found' });
-    }
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
+// Delete a product (admin only) - TEMPORARILY COMMENTED OUT FOR DEBUGGING
+// router.delete('/:id', auth, requireRole('admin'), async (req, res) => {
+//   try {
+//     const product = await Product.findByIdAndDelete(req.params.id);
+//     if (product) {
+//       res.json({ message: 'Product deleted' });
+//     } else {
+//       res.status(404).json({ message: 'Product not found' });
+//     }
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+// });
 
 export default router; 
