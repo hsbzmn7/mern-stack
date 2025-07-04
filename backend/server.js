@@ -4,6 +4,7 @@ import cors from "cors";
 import connectDB from './config/db.js';
 import productRoutes from './routes/products.js';
 import { errorHandler, notFound } from './middleware/errorHandler.js';
+import authRoutes from './routes/auth.js';
 
 dotenv.config();
 
@@ -18,6 +19,7 @@ app.use(express.json());
 
 // Routes
 app.use('/api/products', productRoutes);
+app.use('/api/auth', authRoutes);
 
 app.get("/", (req, res) => {
   res.send("Welcome, server is live");
