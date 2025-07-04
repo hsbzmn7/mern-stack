@@ -3,8 +3,9 @@ import Header from "../../components/Header";
 import { EmptyComponent } from "../../components/Empty";
 import ProductCard from "../../components/ProductCard";
 import ProductModal from "../../components/ProductModal";
-import { Container, Row, Col, Button } from "react-bootstrap";
+import { Container, Row, Col, Button, Alert } from "react-bootstrap";
 import { productsAPI } from "../../services/api";
+import { useAuth } from "../../contexts/AuthContext";
 
 export const Products = () => {
   const [productList, setProductList] = useState([]);
@@ -12,6 +13,7 @@ export const Products = () => {
   const [errorMsg, setErrorMsg] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [currentProduct, setCurrentProduct] = useState(null);
+  const { user } = useAuth();
 
   // Fetch products on component mount
   useEffect(() => {
@@ -24,7 +26,7 @@ export const Products = () => {
       setProductList(result.data);
       setIsLoading(false);
     } catch (err) {
-      setErrorMsg('Could not load products. Please try again later.');
+      setErrorMsg(err.response?.data?.message || 'Could not load products. Please try again later.');
       setIsLoading(false);
     }
   };
@@ -34,7 +36,7 @@ export const Products = () => {
       await productsAPI.delete(id);
       setProductList(productList.filter(item => item._id !== id));
     } catch (err) {
-      setErrorMsg('Failed to remove product');
+      setErrorMsg(err.response?.data?.message || 'Failed to remove product');
     }
   };
 
@@ -56,8 +58,9 @@ export const Products = () => {
       }
       setCurrentProduct(null);
       setModalVisible(false);
+      setErrorMsg(null);
     } catch (err) {
-      setErrorMsg('Could not save product changes');
+      setErrorMsg(err.response?.data?.message || 'Could not save product changes');
     }
   };
 
@@ -77,22 +80,15 @@ export const Products = () => {
     );
   }
 
-  if (errorMsg) {
-    return (
-      <section>
-        <Header />
-        <Container className="mt-4">
-          <div className="text-center text-danger">{errorMsg}</div>
-        </Container>
-      </section>
-    );
-  }
-
   return (
     <section>
       <Header />
       <Container className="mt-4">
-        <div className="d-flex justify-content-end mb-4">
+        <div className="d-flex justify-content-between align-items-center mb-4">
+          <div>
+            <h2>Products</h2>
+            <p className="text-muted">Welcome back, {user?.name}!</p>
+          </div>
           <Button 
             variant="primary" 
             onClick={() => setModalVisible(true)}
@@ -101,6 +97,12 @@ export const Products = () => {
             + New Product
           </Button>
         </div>
+
+        {errorMsg && (
+          <Alert variant="danger" dismissible onClose={() => setErrorMsg(null)}>
+            {errorMsg}
+          </Alert>
+        )}
 
         {productList.length === 0 ? (
           <div

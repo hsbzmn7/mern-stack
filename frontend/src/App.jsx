@@ -6,7 +6,9 @@ import { Home } from './pages/Home/Home';
 import { Products } from './pages/Products/Products';
 import { Contact } from './pages/Contact/Contact';
 import Register from './pages/Register/Register';
+import Login from './pages/Login/Login';
 import { ThemeProvider, useTheme } from './contexts/ThemeContext';
+import { AuthProvider } from './contexts/AuthContext';
 
 function ThemeToggle() {
   const { theme, toggleTheme } = useTheme();
@@ -30,6 +32,7 @@ function AppContent() {
           <Route path='/products' element={<Products />} />
           <Route path='/contact' element={<Contact />} />
           <Route path='/register' element={<Register />} />
+          <Route path='/login' element={<Login />} />
         </Routes>
       </Router>
     </>
@@ -38,9 +41,11 @@ function AppContent() {
 
 function App() {
   return (
-    <ThemeProvider>
-      <AppContent />
-    </ThemeProvider>
+    <AuthProvider>
+      <ThemeProvider>
+        <AppContent />
+      </ThemeProvider>
+    </AuthProvider>
   );
 }
 

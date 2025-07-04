@@ -3,29 +3,23 @@ import { Container, Form, Button, Alert } from 'react-bootstrap';
 import { useAuth } from '../../contexts/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 
-const initialState = {
-  name: '',
-  email: '',
-  password: '',
-  role: 'user',
-};
-
-const Register = () => {
-  const [form, setForm] = useState(initialState);
+const Login = () => {
+  const [form, setForm] = useState({
+    email: '',
+    password: '',
+  });
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [apiError, setApiError] = useState('');
   
-  const { register } = useAuth();
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const validate = () => {
     const newErrors = {};
-    if (!form.name.trim()) newErrors.name = 'Name is required';
     if (!form.email.trim()) newErrors.email = 'Email is required';
     else if (!/^\S+@\S+\.\S+$/.test(form.email)) newErrors.email = 'Invalid email format';
     if (!form.password) newErrors.password = 'Password is required';
-    else if (form.password.length < 6) newErrors.password = 'Password must be at least 6 characters';
     return newErrors;
   };
 
@@ -44,7 +38,7 @@ const Register = () => {
       setIsLoading(true);
       setApiError('');
       
-      const result = await register(form);
+      const result = await login(form.email, form.password);
       
       if (result.success) {
         navigate('/products');
@@ -66,7 +60,7 @@ const Register = () => {
               Product Hunt
             </div>
           </div>
-          <h4 className="text-center mb-4">Sign Up</h4>
+          <h4 className="text-center mb-4">Sign In</h4>
           
           {apiError && (
             <Alert variant="danger" className="mb-3">
@@ -75,19 +69,6 @@ const Register = () => {
           )}
           
           <Form onSubmit={handleSubmit} autoComplete="off">
-            <Form.Group className="mb-2">
-              <Form.Label className="mb-0">Full Name</Form.Label>
-              <Form.Control
-                type="text"
-                name="name"
-                value={form.name}
-                onChange={handleChange}
-                autoComplete="off"
-                isInvalid={!!errors.name}
-              />
-              {errors.name && <div className="text-danger small">{errors.name}</div>}
-            </Form.Group>
-            
             <Form.Group className="mb-2">
               <Form.Label className="mb-0">Email</Form.Label>
               <Form.Control
@@ -108,7 +89,7 @@ const Register = () => {
                 name="password"
                 value={form.password}
                 onChange={handleChange}
-                autoComplete="new-password"
+                autoComplete="current-password"
                 isInvalid={!!errors.password}
               />
               {errors.password && <div className="text-danger small">{errors.password}</div>}
@@ -120,14 +101,14 @@ const Register = () => {
               style={{ background: '#006eff', border: 'none' }}
               disabled={isLoading}
             >
-              {isLoading ? 'Creating Account...' : 'Sign Up'}
+              {isLoading ? 'Signing In...' : 'Sign In'}
             </Button>
             
             <div className="text-center">
               <small>
-                Already have an account?{' '}
-                <Link to="/login" style={{ color: '#006eff', textDecoration: 'none' }}>
-                  Sign in here
+                Don't have an account?{' '}
+                <Link to="/register" style={{ color: '#006eff', textDecoration: 'none' }}>
+                  Sign up here
                 </Link>
               </small>
             </div>
@@ -138,4 +119,4 @@ const Register = () => {
   );
 };
 
-export default Register; 
+export default Login; 
