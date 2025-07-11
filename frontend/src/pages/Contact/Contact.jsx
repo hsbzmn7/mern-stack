@@ -3,7 +3,7 @@ import { Container, Form, Button, Row, Col, Card } from 'react-bootstrap';
 import { FaEnvelope, FaPhone, FaMapMarkerAlt } from 'react-icons/fa';
 import Header from '../../components/Header';
 
-export const Contact = () => {
+const Contact = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -133,3 +133,5 @@ export const Contact = () => {
     </section>
   );
 };
+
+export default Contact;

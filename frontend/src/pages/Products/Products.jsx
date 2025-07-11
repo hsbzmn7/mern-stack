@@ -9,7 +9,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 
-export const Products = () => {
+const Products = () => {
   const [productList, setProductList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState(null);
@@ -148,3 +148,5 @@ export const Products = () => {
     </section>
   );
 };
+
+export default Products;

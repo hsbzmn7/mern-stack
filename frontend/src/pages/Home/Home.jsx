@@ -6,7 +6,7 @@ import Hero from '../../components/Hero';
 import { productsAPI } from '../../services/api';
 import { useAuth } from '../../contexts/AuthContext';
 
-export const Home = () => {
+const Home = () => {
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
@@ -145,3 +145,5 @@ export const Home = () => {
     </section>
   );
 };
+
+export default Home;
