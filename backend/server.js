@@ -17,31 +17,22 @@ const app = express();
 const PORT = process.env.PORT || 5400;
 
 // Swagger setup
+// Minimal Swagger spec for debugging
 const swaggerOptions = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'Product Management API',
+      title: 'Test API',
       version: '1.0.0',
-      description: 'API documentation for the Product Management System',
+      description: 'Minimal Swagger spec for debugging',
     },
     servers: [
       {
-        url: 'http://localhost:' + PORT + '/api',
+        url: 'https://mern-stack-hw4y.onrender.com/api',
       },
     ],
-    components: {
-      securitySchemes: {
-        bearerAuth: {
-          type: 'http',
-          scheme: 'bearer',
-          bearerFormat: 'JWT',
-        },
-      },
-    },
-    security: [{ bearerAuth: [] }],
   },
-  apis: ['./routes/*.js'], // Path to the API docs
+  apis: [],
 };
 const swaggerSpec = swaggerJSDoc(swaggerOptions);
 app.use('/swagger-ui', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
