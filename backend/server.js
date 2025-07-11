@@ -22,17 +22,27 @@ const swaggerOptions = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'Test API',
+      title: 'Product Management API',
       version: '1.0.0',
-      description: 'Minimal Swagger spec for debugging',
+      description: 'API documentation for the Product Management System',
     },
     servers: [
       {
         url: 'https://mern-stack-hw4y.onrender.com/api',
       },
     ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        },
+      },
+    },
+    security: [{ bearerAuth: [] }],
   },
-  apis: [],
+  apis: ['./routes/*.js'], // Path to the API docs
 };
 const swaggerSpec = swaggerJSDoc(swaggerOptions);
 app.use('/swagger-ui', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
