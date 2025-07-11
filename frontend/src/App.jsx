@@ -1,14 +1,17 @@
+import React, { Suspense, lazy } from 'react';
 import './App.css';
 import './styles/global.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Home } from './pages/Home/Home';
-import { Products } from './pages/Products/Products';
-import { Contact } from './pages/Contact/Contact';
-import Register from './pages/Register/Register';
-import Login from './pages/Login/Login';
 import { ThemeProvider, useTheme } from './contexts/ThemeContext';
 import { AuthProvider } from './contexts/AuthContext';
+import ProtectedRoute from './components/ProtectedRoute';
+
+const Home = lazy(() => import('./pages/Home/Home'));
+const Products = lazy(() => import('./pages/Products/Products'));
+const Contact = lazy(() => import('./pages/Contact/Contact'));
+const Register = lazy(() => import('./pages/Register/Register'));
+const Login = lazy(() => import('./pages/Login/Login'));
 
 function ThemeToggle() {
   const { theme, toggleTheme } = useTheme();
@@ -21,19 +24,20 @@ function ThemeToggle() {
 
 function AppContent() {
   const { theme } = useTheme();
-  // Set data-theme attribute for global styling
   document.body.setAttribute('data-theme', theme);
   return (
     <>
       <ThemeToggle />
       <Router>
-        <Routes>
-          <Route path='/' element={<Home />} />
-          <Route path='/products' element={<Products />} />
-          <Route path='/contact' element={<Contact />} />
-          <Route path='/register' element={<Register />} />
-          <Route path='/login' element={<Login />} />
-        </Routes>
+        <Suspense fallback={<div className="d-flex justify-content-center align-items-center" style={{ minHeight: '100vh' }}><div className="spinner-border" role="status"><span className="visually-hidden">Loading...</span></div></div>}>
+          <Routes>
+            <Route path='/' element={<Home />} />
+            <Route path='/products' element={<ProtectedRoute><Products /></ProtectedRoute>} />
+            <Route path='/contact' element={<Contact />} />
+            <Route path='/register' element={<Register />} />
+            <Route path='/login' element={<Login />} />
+          </Routes>
+        </Suspense>
       </Router>
     </>
   );

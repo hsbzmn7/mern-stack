@@ -6,6 +6,8 @@ import ProductModal from "../../components/ProductModal";
 import { Container, Row, Col, Button, Alert } from "react-bootstrap";
 import { productsAPI } from "../../services/api";
 import { useAuth } from "../../contexts/AuthContext";
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 
 export const Products = () => {
   const [productList, setProductList] = useState([]);
@@ -74,7 +76,18 @@ export const Products = () => {
       <section>
         <Header />
         <Container className="mt-4">
-          <div className="text-center">Loading products...</div>
+          <Row className="g-4">
+            {[...Array(8)].map((_, idx) => (
+              <Col key={idx} xs={12} sm={6} md={4} lg={3}>
+                <div className="h-100 p-2">
+                  <Skeleton height={200} style={{ marginBottom: 12 }} />
+                  <Skeleton height={24} width={`80%`} style={{ marginBottom: 8 }} />
+                  <Skeleton count={2} height={16} style={{ marginBottom: 6 }} />
+                  <Skeleton height={32} width={`60%`} />
+                </div>
+              </Col>
+            ))}
+          </Row>
         </Container>
       </section>
     );
