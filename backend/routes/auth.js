@@ -8,6 +8,52 @@ import requireRole from '../middleware/role.js';
 
 const router = express.Router();
 
+/**
+ * @swagger
+ * tags:
+ *   name: Auth
+ *   description: User authentication
+ */
+
+/**
+ * @swagger
+ * /auth/register:
+ *   post:
+ *     summary: Register a new user
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - email
+ *               - password
+ *             properties:
+ *               name:
+ *                 type: string
+ *               email:
+ *                 type: string
+ *                 format: email
+ *               password:
+ *                 type: string
+ *                 format: password
+ *               role:
+ *                 type: string
+ *                 enum: [user, admin]
+ *                 description: Only admin can set role to admin
+ *     responses:
+ *       201:
+ *         description: Registration successful
+ *       400:
+ *         description: Invalid input
+ *       409:
+ *         description: Email already registered
+ *       403:
+ *         description: Only admin can create admin users
+ */
 // Register
 router.post('/register',
   [
@@ -45,6 +91,54 @@ router.post('/register',
   }
 );
 
+/**
+ * @swagger
+ * /auth/login:
+ *   post:
+ *     summary: Login a user
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *               password:
+ *                 type: string
+ *                 format: password
+ *     responses:
+ *       200:
+ *         description: Login successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                     name:
+ *                       type: string
+ *                     email:
+ *                       type: string
+ *                     role:
+ *                       type: string
+ *       400:
+ *         description: Invalid input
+ *       401:
+ *         description: Invalid credentials
+ */
 // Login
 router.post('/login',
   [
