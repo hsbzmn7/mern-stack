@@ -47,19 +47,31 @@ router.post('/register',
     body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters.'),
     body('role').optional().isIn(['user', 'admin'])
   ],
-  auth,
-  (req, res, next) => {
-    // Only allow admin to set role to admin
-    if (req.body.role === 'admin' && (!req.user || req.user.role !== 'admin')) {
-      return res.status(403).json({ message: 'Only admin can create admin users.' });
-    }
-    next();
-  },
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
     }
+    
+    // Check if trying to create admin user
+    if (req.body.role === 'admin') {
+      // Only allow admin to set role to admin
+      const authHeader = req.headers.authorization;
+      if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(403).json({ message: 'Only admin can create admin users.' });
+      }
+      
+      try {
+        const token = authHeader.split(' ')[1];
+        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'devsecret');
+        if (decoded.role !== 'admin') {
+          return res.status(403).json({ message: 'Only admin can create admin users.' });
+        }
+      } catch (err) {
+        return res.status(403).json({ message: 'Only admin can create admin users.' });
+      }
+    }
+    
     try {
       const { name, email, password, role } = req.body;
       const existingUser = await User.findOne({ email });
@@ -69,7 +81,19 @@ router.post('/register',
       const hashedPassword = await bcrypt.hash(password, 10);
       const user = new User({ name, email, password: hashedPassword, role: role || 'user' });
       await user.save();
-      res.status(201).json({ message: 'Registration successful.' });
+      
+      // Generate token for the new user
+      const token = jwt.sign(
+        { userId: user._id, email: user.email, role: user.role },
+        process.env.JWT_SECRET || 'devsecret',
+        { expiresIn: '2h' }
+      );
+      
+      res.status(201).json({ 
+        message: 'Registration successful.',
+        token,
+        user: { id: user._id, name: user.name, email: user.email, role: user.role }
+      });
     } catch (err) {
       res.status(500).json({ message: 'Registration failed.' });
     }
